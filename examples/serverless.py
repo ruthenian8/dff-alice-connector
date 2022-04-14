@@ -22,8 +22,8 @@ actor = Actor(plot=plot, start_label=("root", "start"), fallback_label=("root", 
 connector = dict()
 
 
-def alice_webhook(request):
-    update = request.form
+def alice_webhook(event: dict, context: object):
+    update = event.copy()
     user_id = AliceConn.get_user_id(update)
     context: Context = connector.get(user_id, AliceConn.get_initial_context(user_id))
     # add newly received user data to the context

@@ -1,0 +1,3 @@
+df_engine>=0.8.1
+flask>=2.0.0
+dff-alice-connector @ git+https://github.com/ruthenian8/dff-alice-connector.git@main

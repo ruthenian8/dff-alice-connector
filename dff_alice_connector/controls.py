@@ -1,43 +1,46 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Optional, List
+from functools import partial
 
 from pydantic import BaseModel, Field, validator
 
 from .utils import get_size_validator, get_len_validator
+
+validator = partial(validator, allow_reuse=True)
 
 
 class BaseButton(BaseModel, ABC):
     url: str
     payload: Dict[str, str]
 
-    _url_validator = validator("url", allow_reuse=True)(get_size_validator(1024))
-    _payload_validator = validator("payload", allow_reuse=True)(get_size_validator(4096))
+    _url_validator = validator("url")(get_size_validator(1024))
+    _payload_validator = validator("payload")(get_size_validator(4096))
 
 
 class CardButton(BaseButton):
     text: str = ...
 
-    _text_validator = validator("text", allow_reuse=True)(get_len_validator(64))
+    _text_validator = validator("text")(get_len_validator(64))
 
 
 class Button(BaseButton):
     title: str = ...
-    hide: bool = False
+    hide: bool = True
 
-    _title_validator = validator("title", allow_reuse=True)(get_len_validator(64))
+    _title_validator = validator("title")(get_len_validator(64))
 
 
 class ItemsListHeader(BaseModel):
     text: str = ...
 
-    _text_validator = validator("text", allow_reuse=True)(get_len_validator(64))
+    _text_validator = validator("text")(get_len_validator(64))
 
 
 class ItemsListFooter(BaseModel):
     text: str = ...
     button: Optional[CardButton] = None
 
-    _text_validator = validator("text", allow_reuse=True)(get_len_validator(64))
+    _text_validator = validator("text")(get_len_validator(64))
 
 
 class Image(BaseModel):
@@ -45,13 +48,13 @@ class Image(BaseModel):
     title: Optional[str] = None
     button: Optional[CardButton] = None
 
-    _title_valdiator = validator("title", allow_reuse=True)(get_len_validator(128))
+    _title_valdiator = validator("title")(get_len_validator(128))
 
 
 class ImageWithDescription(Image):
     description: Optional[str] = None
 
-    _desc_validator = validator("description", allow_reuse=True)(get_len_validator(256))
+    _desc_validator = validator("description")(get_len_validator(256))
 
 
 class BaseCard(BaseModel, ABC):
@@ -70,7 +73,7 @@ class ImageGallery(BaseCard):
     type: str = Field("ImageGallery", const=True)
     items: List[Image] = Field(default_factory=list)
 
-    _items_validator = validator("items", allow_reuse=True)(get_len_validator(10))
+    _items_validator = validator("items")(get_len_validator(10))
 
 
 class ItemsList(BaseCard):
@@ -79,4 +82,4 @@ class ItemsList(BaseCard):
     header: Optional[ItemsListHeader] = None
     footer: Optional[ItemsListFooter] = None
 
-    _items_validator = validator("items", allow_reuse=True)(get_len_validator(5))
+    _items_validator = validator("items")(get_len_validator(5))

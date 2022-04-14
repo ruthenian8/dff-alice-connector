@@ -1,6 +1,7 @@
 import sys
+from functools import wraps
 from urllib import parse
-from typing import Union
+from typing import Union, Callable
 from numbers import Number
 
 
@@ -23,3 +24,18 @@ def compare_func(item: Union[dict, Number], candidates: list, full_match: bool =
 
 def quote_url(url: str):
     return parse.quote(url, safe="~@#$&()*!+=:;,.?/'")
+
+
+def partialmethod(func: Callable, **part_kwargs):
+    """
+    This function replaces the partialmethod implementation from functools.
+    In contrast with the original class-based approach, it decorates the function, so we can use docstrings.
+    """
+
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        return func(self, *args, **part_kwargs, **kwargs)
+
+    wrapper.__doc__ = func.__doc__.format(**part_kwargs)
+
+    return wrapper

@@ -1,6 +1,7 @@
 from typing import List, Dict, Optional, Any, Union
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel
 
+from .request_types import YandexCommands
 from .controls import *
 
 
@@ -20,7 +21,7 @@ class YandexResponseModel(BaseModel):
     text: str = ...
     tts: Optional[str] = None
     buttons: Optional[List[Button]] = None
-    card: Optional[BaseCard] = None
+    card: Optional[Union[ItemsList, BigImage, ImageGallery]] = None
     end_session: bool = False
     show_item_meta: Optional[ItemMeta] = None
     directives: Optional[Dict[str, str]] = None

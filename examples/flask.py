@@ -26,10 +26,10 @@ actor = Actor(plot=plot, start_label=("root", "start"), fallback_label=("root", 
 # initialize a state storage
 connector = dict()
 
-app = Flask(__name__)
+application = Flask(__name__)
 
 
-@app.route("/alice-hook", methods=["POST"])
+@application.route("/alice-hook", methods=["POST"])
 def respond() -> Response:
     update = request.form
     user_id = get_user_id(update)
@@ -50,4 +50,4 @@ def respond() -> Response:
 
 
 if __name__ == "__main__":
-    app.run(host="localhost", debug=True)
+    application.run(host="0.0.0.0")

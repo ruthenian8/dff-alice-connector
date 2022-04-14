@@ -6,7 +6,7 @@ from functools import partialmethod
 from pydantic import BaseModel
 from df_engine.core import Context, Actor
 
-from .request_types import YandexEntityType, YandexIntent, YandexRequestType, YandexEntity
+from .request_types import YandexEntityType, YandexDefaultIntents, YandexRequestType, YandexEntity
 from .utils import compare_func
 
 
@@ -47,12 +47,12 @@ class CndNamespace(object):
 
     has_number = partialmethod(has_entities, ent_type=YandexEntityType.NUMBER)
 
-    def has_intents(self, intents: List[YandexIntent]):
+    def has_intents(self, intents: List[Union[str, YandexDefaultIntents]]):
         def handler(ctx: Context, actor: Actor, *args, **kwargs) -> bool:
 
             request_intents = ctx.misc.get("ALICE_CONNECTOR", {}).get("request", {}).get("nlu", {}).get("intents", {})
 
-            intents = [item.value for item in intents]
+            intents = [item.value for item in intents if isinstance(item, YandexDefaultIntents)]
 
             return bool(request_intents.keys() & intents)
 

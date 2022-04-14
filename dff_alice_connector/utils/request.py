@@ -1,20 +1,21 @@
 from df_engine.core import Context
 
 from .common import get_positive_hash
+from ..request_types import YandexRequest
 
 
-def get_user_id(update: dict, use_application_id: bool = True) -> str:
+def get_user_id(update: YandexRequest, use_application_id: bool = True) -> str:
     if use_application_id:
-        uid = update["request"]["session"]["application"]["application_id"]
+        uid = update.session.application.application_id
     else:
-        uid = update["request"]["session"]["session_id"]
+        uid = update.session.session_id
 
     return get_positive_hash(uid)
 
 
-def set_state(ctx: Context, update: dict):
-    ctx.add_request(update.get("request", {}).get("original_utterance", "data"))
-    ctx.misc["ALICE_CONNECTOR"]["request"] = update["request"]
+def set_state(ctx: Context, update: YandexRequest):
+    ctx.add_request(update.request and update.request.original_utterance or "data")
+    ctx.misc["ALICE_CONNECTOR"]["request"] = update.request
 
 
 def get_request(ctx: Context) -> dict:

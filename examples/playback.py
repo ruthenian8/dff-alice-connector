@@ -26,10 +26,10 @@ actor = Actor(plot=plot, start_label=("root", "start"), fallback_label=("root", 
 # initialize a state storage
 connector = dict()
 
-app = Flask(__name__)
+application = Flask(__name__)
 
 
-@app.route("/alice-hook", methods=["POST"])
+@application.route("/alice-hook", methods=["POST"])
 def respond() -> Response:
     update = request.form
     user_id = get_user_id(update)
@@ -45,12 +45,9 @@ def respond() -> Response:
     # save the context
     connector[user_id] = updated_context
 
-    if isinstance(response, str):
-        return response
-    # optionally provide conditions to use other response methods
-    # elif isinstance(response, dict):
-    #     return ...
+    yandex_response = AliceConn.alice_adapter(response)
+    return yandex_response.dict(exclude_none=True)
 
 
 if __name__ == "__main__":
-    app.run(host="localhost", debug=True)
+    application.run(host="0.0.0.0")
