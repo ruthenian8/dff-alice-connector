@@ -6,6 +6,7 @@ from flask import Flask, request, Response
 import dff_alice_connector as AliceConn
 from dff_alice_connector.utils import get_user_id, set_state, get_initial_context
 
+from dff_generic_response import GenericResponse
 
 plot = {
     GLOBAL: {
@@ -15,8 +16,8 @@ plot = {
         }
     },
     "root": {
-        "start": {RESPONSE: "привет"},
-        "fallback": {RESPONSE: "пока"},
+        "start": {RESPONSE: GenericResponse(text="что скажешь?", buttons=["привет", "до свидания"])},
+        "fallback": {RESPONSE: GenericResponse(text="что скажешь?", buttons=["привет", "здравствуй"])},
     },
 }
 
