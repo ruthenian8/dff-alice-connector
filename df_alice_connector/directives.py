@@ -1,5 +1,10 @@
-from typing import List, Literal, Optional, Dict
+from typing import List, Optional, Dict
 from uuid import UUID
+
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
 
 from pydantic import BaseModel, HttpUrl, Field, validator
 

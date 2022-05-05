@@ -1,9 +1,8 @@
 """Main module"""
 from argparse import ArgumentError
-from typing import Callable, Optional, List, Union, NamedTuple
+from typing import Callable, Optional, List, Union
 from functools import partialmethod
 
-from pydantic import BaseModel
 from df_engine.core import Context, Actor
 
 from .request import (

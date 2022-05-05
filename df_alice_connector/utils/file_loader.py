@@ -1,8 +1,8 @@
 import os
 import requests
-from typing import Optional, Dict
+from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from .common import partialmethod
 
