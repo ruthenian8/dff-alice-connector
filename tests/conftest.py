@@ -39,6 +39,7 @@ def testing_request():
             "interfaces": {"screen": {}, "payments": {}, "account_linking": {}, "audio_player": {}},
         },
         "request": {
+            "original_utterance": "включи свет на кухне, пожалуйста",
             "command": "включи свет на кухне, пожалуйста",
             "type": "SimpleUtterance",
             "payload": {"quantity": 1},

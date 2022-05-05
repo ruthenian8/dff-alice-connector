@@ -167,8 +167,7 @@ class YandexRequest(BaseModel):
     meta: Meta = ...
     request: YandexRequestModel = ...
     session: Optional[Session] = None
-    new: bool = False
-    state: State = ...
+    state: Optional[State] = None
     version: str = Field("1.0", const=True)
 
     def is_new_session(self):
