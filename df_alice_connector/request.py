@@ -1,8 +1,9 @@
 from abc import ABC
+import json
 from typing import Any, Dict, List, Optional, Union
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 
 
 class YandexCommands(Enum):
@@ -74,7 +75,20 @@ class DatetimeEntity(YandexEntityModel):
 
 class YandexEntity(BaseModel, use_enum_values=True):
     type: YandexEntityType = ...
-    value: Union[GeoEntity, FioEntity, DatetimeEntity, int, float] = ...
+    value: Any = ...
+
+    @validator("value", pre=False)
+    def set_value_type(cls, val, values):
+        _type = values["type"]
+        if _type == YandexEntityType.FIO.value:
+            val = FioEntity.parse_obj(val)
+        elif _type == YandexEntityType.GEO.value:
+            val = GeoEntity.parse_obj(val)
+        elif _type == YandexEntityType.DATETIME.value:
+            val = DatetimeEntity.parse_obj(val)
+        elif _type == YandexEntityType.NUMBER.value:
+            val = float(val)
+        return val
 
 
 class Span(BaseModel):
@@ -115,11 +129,17 @@ class YandexRequestModel(BaseModel, use_enum_values=True):
     command: Optional[str] = None
     original_utterance: Optional[str] = None
     type: YandexRequestType = ...
-    markup: Dict[str, str] = Field(default_factory=dict)
-    payload: Dict[str, Any] = Field(default_factory=dict)
+    markup: Optional[Dict[str, str]] = None
+    payload: Optional[Dict[str, Any]] = None
     nlu: Optional[NLU] = None
     show_type: Optional[str] = None
-    error: Dict[str, Any] = Field(default_factory=dict)
+    error: Optional[Dict[str, Any]] = None
+
+    @validator("payload", pre=True)
+    def set_payload(cls, pl):
+        if isinstance(pl, str):
+            return json.loads(pl)
+        return pl
 
 
 class Application(BaseModel):

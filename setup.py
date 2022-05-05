@@ -33,7 +33,7 @@ test_requirements = parse_requirements("requirements_test.txt")
 
 
 setup(
-    name="dff-alice-connector",
+    name="df-alice-connector",
     version="0.0.1",
     description=description,
     long_description=long_description,
@@ -57,7 +57,7 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3 :: Only",
     ],
-    keywords=["chatbots", "dff-alice-connector"],  # Optional
+    keywords=["chatbots", "df-alice-connector"],  # Optional
     packages=find_packages(where="."),  # Required
     include_package_data=True,
     python_requires=">=3.6, <4",

@@ -14,6 +14,8 @@ def compare_func(item: Union[dict, Number], candidates: list, full_match: bool =
         return any(map(lambda x: x == item, candidates))
 
     for candidate in candidates:
+        print("item: " + str(item))
+        print("candidate: " + str(candidate))
         intersection = item.items() & candidate.items()
         if intersection:
             if full_match and len(intersection) != len(candidate):

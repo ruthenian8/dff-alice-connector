@@ -30,7 +30,7 @@ check: lint test
 .PHONY: check
 
 lint: venv
-	$(VENV_PATH)/bin/python -m flake8 --config=setup.cfg dff_alice_connector/
+	$(VENV_PATH)/bin/python -m flake8 --config=setup.cfg df_alice_connector/
 	@set -e && $(VENV_PATH)/bin/python -m black --exclude="setup\.py" --line-length=120 --check . || ( \
 		echo "================================"; \
 		echo "Bad formatting? Run: make format"; \
@@ -40,7 +40,7 @@ lint: venv
 .PHONY: lint
 
 test: venv
-	@$(VENV_PATH)/bin/python -m pytest --cov-report html --cov-report term --cov=dff_alice_connector tests/
+	@$(VENV_PATH)/bin/python -m pytest --cov-report html --cov-report term --cov=df_alice_connector tests/
 .PHONY: test
 
 test_all: venv test lint

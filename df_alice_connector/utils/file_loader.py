@@ -24,14 +24,39 @@ class StoredSound(BaseModel):
     error: Optional[str] = None
 
 
-class FileLoader(BaseModel, arbitrary_types_allowed=True):
-    oauth_token: str = ...
-    skill_id: str = ...
-    fallback_img_id: Optional[str] = None
-    fallback_sound_id: Optional[str] = None
-    sound_file_2_id: Dict[str, str] = Field(default_factory=dict)
-    image_file_2_id: Dict[str, str] = Field(default_factory=dict)
-    image_url_2_id: Dict[str, str] = Field(default_factory=dict)
+class FileLoader(object):
+    """
+    Class FileLoader should facilitate loading files to Yandex Dialogs http API.
+
+    Parameters
+    -----------
+
+    oauth_token: str
+        Yandex HTTP API token
+    skill_id: str
+        Alice skill identificator (issued on creation)
+    fallback_img_id: Optional[str]
+        ID of the image to show on upload failure.
+    fallback_sound_id: Optional[str]
+        ID of the sound to show on upload failure.
+
+    """
+
+    def __init__(
+        self,
+        oauth_token: str,
+        skill_id: str,
+        fallback_img_id: Optional[str] = None,
+        fallback_sound_id: Optional[str] = None,
+    ) -> None:
+
+        self.oauth_token = oauth_token
+        self.skill_id = skill_id
+        self.fallback_img_id = fallback_img_id
+        self.fallback_sound_id = fallback_sound_id
+        self.sound_file_2_id = dict()
+        self.image_file_2_id = dict()
+        self.image_url_2_id = dict()
 
     def get_media_by_url(self, *, url: str, key: str, registry: str) -> Optional[str]:
         """
@@ -48,7 +73,7 @@ class FileLoader(BaseModel, arbitrary_types_allowed=True):
 
         """
         if key == "sound":
-            raise NotImplementedError("Getting sound by ID is not implemented in the original Yandex protocol.")
+            raise NotImplementedError("Getting sound by URL is not implemented in the original Yandex protocol.")
 
         reg: dict = getattr(self, registry)
         file_id: str = reg.get(url)
@@ -139,7 +164,7 @@ class FileLoader(BaseModel, arbitrary_types_allowed=True):
 
     def get_quota(self):
         """
-        Get existing an occupied amount of storage for images and sounds in bytes
+        Get the cyrrent occupied amount of storage for images and sounds in bytes
 
         """
         r = requests.get(
@@ -156,7 +181,4 @@ class FileLoader(BaseModel, arbitrary_types_allowed=True):
         setattr(self, registry, reg)
 
 
-file_loader = None
-
-if "OAUTH_TOKEN" in os.environ and "SKILL_ID" in os.environ:
-    file_loader = FileLoader(os.getenv("OAUTH_TOKEN"), os.getenv("SKILL_ID"))
+file_loader = FileLoader(os.getenv("OAUTH_TOKEN"), os.getenv("SKILL_ID"))
